@@ -48,4 +48,15 @@ time_stamps
 #'   note = {R package version 1.0.0, https://github.com/r-lib/httr2},
 #'   url = {https://httr2.r-lib.org},
 #' }
+#' 
+#' @Article{,
+#'   title = {Dates and Times Made Easy with {lubridate}},
+#'   author = {Garrett Grolemund and Hadley Wickham},
+#'   journal = {Journal of Statistical Software},
+#'   year = {2011},
+#'   volume = {40},
+#'   number = {3},
+#'   pages = {1--25},
+#'   url = {https://www.jstatsoft.org/v40/i03/},
+#' }
 
