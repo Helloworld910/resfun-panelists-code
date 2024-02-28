@@ -1,4 +1,21 @@
-# Load Libraries ---------------------------------------------------------------
+# Metadata ----------------------------------------------------------------
+
+# Title: snapshots-meta-checker
+# Date created: 23/02/2024
+# Author: Shivam Sen
+# Encoding: UTF-8
+# R version 4.2.2 (2022-10-31 ucrt)
+# Platform: x86_64-w64-mingw32/x64 (64-bit)
+# Running under: Windows 10 x64 (build 19045)
+# RStudio 2022.07.2+576 "Spotted Wakerobin" Release (e7373ef832b49b2a9b88162cfe7eac5f22c40b34, 2022-09-06) for Windows
+# Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.12.8 Chrome/69.0.3497.128 Safari/537.36
+# Magrittr version 2.0.3
+# Httr2 verson 0.2.3
+# Rjson version 0.2.21
+# Lubridate version 1.9.0
+
+
+# Libraries ---------------------------------------------------------------
 library(magrittr)
 library(httr2)
 library(rjson)

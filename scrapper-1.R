@@ -1,7 +1,24 @@
+# Metadata ----------------------------------------------------------------
+
+# Title: scrapper-1
+# Date created: 24/02/2024
+# Author: Shivam Sen
+# Encoding: UTF-8
+# R version 4.2.2 (2022-10-31 ucrt)
+# Platform: x86_64-w64-mingw32/x64 (64-bit)
+# Running under: Windows 10 x64 (build 19045)
+# RStudio 2022.07.2+576 "Spotted Wakerobin" Release (e7373ef832b49b2a9b88162cfe7eac5f22c40b34, 2022-09-06) for Windows
+# Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.12.8 Chrome/69.0.3497.128 Safari/537.36
+# Tidyverse version 1.3.2
+# Rvest version 1.0.3
+# Magrittr version 2.0.3
+
+
 # Libraries ---------------------------------------------------------------
 library(tidyverse)
 library(rvest)
 library(magrittr)
+
 
 # Settings ----------------------------------------------------------------
 setwd("E:/Postgrad Projects/Czech Academy of Science Internship/resfun-panelists-code")
