@@ -60,10 +60,10 @@ scrape_2021_2022 <- function(url) {
     tidyr::unnest(panel)
 
   final_df <- intermediate_df |>
-    mutate(members = purrr::map(panel, .f = function(panel_query, source = resp) {
-      my_query <- paste0("//label[text()='", panel_query, "']/following-sibling::div[@class='accordeon-content']")
+    mutate(members = purrr::map(panel, .f = function(panel_subquery, source = resp) {
+      members_query <- paste0("//label[text()='", panel_subquery, "']/following-sibling::div[@class='accordeon-content']")
       source |>
-        html_elements(xpath = my_query) |>
+        html_elements(xpath = members_query) |>
         html_elements("li") |>
         html_text2()
     })) |>
