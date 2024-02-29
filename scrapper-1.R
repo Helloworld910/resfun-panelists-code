@@ -21,70 +21,66 @@ library(magrittr)
 
 
 # Settings ----------------------------------------------------------------
-setwd("E:/Postgrad Projects/Czech Academy of Science Internship/resfun-panelists-code")
-getwd()
-rm(list=ls())
+# setwd("E:/Postgrad Projects/Czech Academy of Science Internship/resfun-panelists-code")
+# getwd()
+# rm(list=ls())
+# please read https://www.tidyverse.org/blog/2017/12/workflow-vs-script/ !!!!!
+
 
 
 # Scrapper ----------------------------------------------------------------
+urls <- c(
+  "https://wayback.webarchiv.cz/wayback/20211025232040/https://gacr.cz/o-ga-cr/poradni-organy/panely/",
+  "https://wayback.webarchiv.cz/wayback/20221024073116/https://gacr.cz/o-ga-cr/poradni-organy/panely/"
+)
 
-# Encode URL
-url <- URLencode("https://wayback.webarchiv.cz/wayback/20211025232040/https://gacr.cz/o-ga-cr/poradni-organy/panely/",
-                 reserved = FALSE)
-
-# Fetch html
-resp <- read_html(url)
-
-
-# Make empty data frame to collect panel and panelists' names
-data <- data.frame(matrix(ncol=2, nrow=0))
-names(data) <- c("panelist", "panel")
-
-# Count number of sections
-num_sections <- length(resp %>%
-                         html_elements(xpath = "//h2[text()='Složení hodnoticích panelů']/following::div[@class='accordeons']"))
-
-# Loop over each section
-i <- 1
-for (i in c(1:num_sections)) {
-  # Count number of panels in each section
-  xpath_query <- paste0("//h2[text()='Složení hodnoticích panelů']/following::div[@class='accordeons'][", i, "]/div[@class='accordeon']")
-  num_panels <- length(resp %>%
-                         html_elements(xpath=xpath_query)
+scrape_2021_2022 <- function(url) {
+  url <- URLencode(url,
+    reserved = FALSE
   )
-  # Loop over each panel
-  j <- 1
-  for (j in c(1:num_panels)) {
-    # Fetch panel name
-    xpath_query <- paste0("//h2[text()='Složení hodnoticích panelů']/following::div[@class='accordeons'][", i, "]/div[@class='accordeon'][", j, "]/label")
-    panel <- resp %>%
-      html_elements(xpath=xpath_query) %>%
+  # Fetch html
+  resp <- read_html(url)
+
+
+  section_query <- paste0("//h2[text()='Složení hodnoticích panelů']/following-sibling::h3[@class='collapsible-header']")
+  panel_query <- paste0("//h2[text()='Složení hodnoticích panelů']/following::div[@class='accordeons']")
+  section_names <- resp |>
+    html_elements(xpath = section_query) |>
+    html_text2()
+  panels_html <- resp |> html_elements(xpath = panel_query)
+  panel_names <- purrr::map(panels_html, .f = function(x) {
+    x |>
+      html_elements(".accordeon") |>
+      html_elements("label") |>
       html_text2()
-    # Fetch panelists' names
-    xpath_query <- paste0("//h2[text()='Složení hodnoticích panelů']/following::div[@class='accordeons'][", i, "]/div[@class='accordeon'][", j, "]//ul/li")
-    panelist <- resp %>%
-      html_elements(xpath=xpath_query) %>%
-      html_text2()
-    # Put together panel and panelists names
-    data_unit <- data.frame(panelist=panelist, panel=panel)
-    
-    # Add panel and panelists names to final data
-    data <- rbind(data, data_unit)
-  }
+  }) |>
+    stats::setNames(section_names)
+
+  intermediate_df <- tibble::enframe(panel_names, name = "section", value = "panel") |>
+    tidyr::unnest(panel)
+
+  final_df <- intermediate_df |>
+    mutate(members = purrr::map(panel, .f = function(panel_query, source = resp) {
+      my_query <- paste0("//label[text()='", panel_query, "']/following-sibling::div[@class='accordeon-content']")
+      source |>
+        html_elements(xpath = my_query) |>
+        html_elements("li") |>
+        html_text2()
+    })) |>
+    tidyr::unnest(members) |>
+    mutate(
+      url = url,
+      date = stringr::str_replace(url, "https://wayback.webarchiv.cz/wayback/(\\d{8}).*", "\\1"),
+      date = stringr::str_replace(year, "(\\d{4})(\\d{2})(\\d{2})", "\\1-\\2-\\3")
+    )
 }
 
-# Convert data to tibble
-data <- as_tibble(data)
+data <- purrr::map_df(urls, scrape_2021_2022)
 
-# Add year and url to data
-data %<>%
-  mutate(year=2021, url=url)
-
-# View data
-data
+# TODO: parse names into titles before and after name, first name, last name, chair, vicechair, panel_id
 
 # Save data as csv
-write.csv(data, file="data/panelists_2021.csv")
+write.csv(data, file = "data/panelists_2021.csv")
 
 
 # References --------------------------------------------------------------
@@ -96,4 +92,3 @@ write.csv(data, file="data/panelists_2021.csv")
 #'   note = {R package version 1.0.4, https://github.com/tidyverse/rvest},
 #'   url = {https://rvest.tidyverse.org/},
 #' }
-
