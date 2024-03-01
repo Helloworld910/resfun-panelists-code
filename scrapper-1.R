@@ -71,7 +71,7 @@ scrape_2021_2022 <- function(url) {
     mutate(
       url = url,
       date = stringr::str_replace(url, "https://wayback.webarchiv.cz/wayback/(\\d{8}).*", "\\1"),
-      date = stringr::str_replace(year, "(\\d{4})(\\d{2})(\\d{2})", "\\1-\\2-\\3")
+      date = stringr::str_replace(date, "(\\d{4})(\\d{2})(\\d{2})", "\\1-\\2-\\3")
     )
 }
 
