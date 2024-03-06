@@ -6,3 +6,5 @@ The code in scrapper-1 scrapes the panel names along with their respective panel
 The code in scrapper-2 is almost identical and achieves the same with the 2022 version of the same webpage.
  
 The resultant csv files contain 4 columns storing data regarding the panels, panelists, date and url of the source webpage.
+
+Scrapper-3 now extracts raw data from 2008 version of the website http://pala.gacr.cas.cz/wordpress/ pages 85 to 95.
