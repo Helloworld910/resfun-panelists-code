@@ -2,7 +2,7 @@
 
 # Title: scrapper-1
 # Date created: 24/02/2024
-# Author: Shivam Sen
+# Author: Radim Hladik & Shivam Sen
 # Encoding: UTF-8
 # R version 4.2.2 (2022-10-31 ucrt)
 # Platform: x86_64-w64-mingw32/x64 (64-bit)

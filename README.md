@@ -7,4 +7,4 @@ The code in scrapper-2 is almost identical and achieves the same with the 2022 v
  
 The resultant csv files contain 4 columns storing data regarding the panels, panelists, date and url of the source webpage.
 
-Scrapper-3 now extracts raw data from 2008 version of the website http://pala.gacr.cas.cz/wordpress/ pages 85 to 95.
+Scrapper-3 now extracts and processes data from 2008 version of the website http://pala.gacr.cas.cz/wordpress/ pages 85 to 89 (branch data) as well as pages 90 to 95 (sub-branch data).
