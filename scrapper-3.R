@@ -65,8 +65,6 @@ raw_data_branch
 saveRDS(raw_data_branch, file = here("data", "raw_branch_2008.rds"))
 
 # Scrape sub-branch commission pages --------------------------------------------------
-# Clean environment
-rm(list=ls())
 
 # Encode URLs and store them in a urls vector
 urls_sub <- c(
@@ -82,7 +80,7 @@ extract_data_sub <- function (x) {
   # Fetch html
   resp <- read_html(x)
   # Fetch panel info from html
-  # For this, extract text from p with strong text within class 'post-content'
+  # For this, extract text from p with strong text inside div with class 'post-content'
   # These contain panel codes and names
   panel_info <- resp %>% 
     html_elements(xpath="//div[@class = 'post-content']/p/strong") %>% 
