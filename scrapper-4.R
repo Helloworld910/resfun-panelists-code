@@ -23,6 +23,9 @@ library(here)
 
 
 # Scrape sub-branch commission pages --------------------------------------------------
+
+scrapper_4 <- function(){
+
 # Encode URLs and store them in a urls vector
 urls_sub <- c("https://wayback.webarchiv.cz/wayback/20071007210841/http://pala.gacr.cas.cz/wordpress/?p=191",
               "https://wayback.webarchiv.cz/wayback/20071007210841/http://pala.gacr.cas.cz/wordpress/?p=192",
@@ -68,11 +71,14 @@ extract_panelist_data_p134_main <- function (y) {
   return(panelist_df)
 }
 
-
 # Define function to extract panelist data given a line for pages 1,3 and 4
 extract_panelist_data_p1_sub <- function (z, panel_name) {
+  # Extract words ending with a dot as the titles
+  titles_temp <- unlist(str_extract_all(z, "\\b\\w+\\b\\."))
+  # Collapse panelist's titles list to a single character value
+  titles_temp <- paste(titles_temp, collapse = " ")
   # Remove all words ending with a dot
-  panelist_edited <- str_remove_all(z, "\\b\\w+\\.")
+  panelist_edited <- str_remove_all(z, "\\b\\w+\\b\\.")
   # Remove any 4 digit number
   panelist_edited <- str_remove_all(panelist_edited, "\\b\\d{4}\\b")
   # Remove all extra spaces
@@ -86,22 +92,17 @@ extract_panelist_data_p1_sub <- function (z, panel_name) {
   # Put together panelist name and affiliation with panel name in a dataframe
   panelists_info <- data.frame(panelist_name = panelist_name, 
                                panel_name = panel_name,
-                               panelist_affiliation = affi)
+                               panelist_affiliation = affi,
+                               titles = titles_temp)
   # Return the dataframe
   return(panelists_info)
 }
-
 
 # Extract data from page 1
 data_p1 <- map_df(urls_sub[1], extract_page_1)
 
 # Convert extracted data to tibble
 data_p1 <- as_tibble(data_p1)
-
-# View extracted data
-head(data_p1)
-tail(data_p1)
-
 
 # Exctract data from page 3,4
 # Define pages 3 and 4 main data extraction function
@@ -154,18 +155,9 @@ data_p34 <- map_df(urls_sub[3:4], extract_page_34)
 # Convert extracted data to tibble
 data_p34 <- as_tibble(data_p34)
 
-# View extracted data
-data_p34
-head(data_p34)
-tail(data_p34)
-
-
 # Extract data from page 2 and 5
-
-# Exctract data from page 2,5
 # Form url vector with correct page urls
 urls_25 <- urls_sub[c(2,5)]
-
 
 # Define pages 2 and 5 main data extraction function
 extract_page_25 <- function (x) {
@@ -189,18 +181,11 @@ extract_page_25 <- function (x) {
   return(p25_data_df)
 }
 
-
 # Call extraction function for pages 2 and 5
 data_p25 <- map_df(urls_25, extract_page_25)
 
 # Convert extracted data to tibble
 data_p25 <- as_tibble(data_p25)
-
-# View extracted data
-data_p25
-head(data_p25)
-tail(data_p25)
-
 
 # Put together data from each page
 data_2007_sub <- rbind(data_p1, data_p25, data_p34)
@@ -215,6 +200,8 @@ data_2007_sub %<>%
 # Save 2007 sub-branch data
 write.csv(data_2007_sub, file = here("data", "data_sub_2007.csv"), 
           row.names = FALSE)
+
+}
 
 
 # References --------------------------------------------------------------
